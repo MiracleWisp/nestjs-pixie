@@ -20,6 +20,11 @@ export class ImageService {
     if (!defaultImage) {
       throw new Error('Image not found');
     }
-    return this.resizeImageService.resizeImage(defaultImage, size);
+    const resultImage: Readable = this.resizeImageService.resizeImage(
+      defaultImage,
+      size,
+    );
+    this.imageDao.saveImage(resultImage, id, size);
+    return resultImage;
   }
 }
