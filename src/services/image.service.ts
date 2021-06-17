@@ -11,7 +11,7 @@ export class ImageService {
     private resizeImageService: ResizeImageService,
   ) {}
 
-  async getImage(id: any, size: ImageSize): Promise<Readable> {
+  public async getImage(id: any, size: ImageSize): Promise<Readable> {
     const cachedImage: Readable = await this.imageDao.getImage(id, size);
     if (cachedImage) {
       return cachedImage;

@@ -15,7 +15,8 @@ export class LocalStorageImageDao extends ImageDao {
       imageStream.on('open', () => {
         resolve(imageStream);
       });
-      imageStream.on('error', () => {
+      imageStream.on('error', (err) => {
+        console.log(err);
         resolve(null);
       });
     });

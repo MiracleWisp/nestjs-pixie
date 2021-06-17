@@ -6,7 +6,7 @@ import { Readable } from 'stream';
 
 @Injectable()
 export class ResizeImageService {
-  resizeImage(image: Readable, size: ImageSize): Readable {
+  public resizeImage(image: Readable, size: ImageSize): Readable {
     const transformer: Sharp = sharp().resize(size.width, size.height);
     return image.pipe(transformer);
   }
