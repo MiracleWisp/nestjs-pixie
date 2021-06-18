@@ -6,6 +6,7 @@ import { ImageService } from './services/image.service';
 import { PixieOptions } from './types/pixie-options';
 import { ImageController } from './controllers/image.controller';
 import { PATH_METADATA } from '@nestjs/common/constants';
+import { PIXIE_CONFIG } from './consts/injection-tokens';
 
 @Module({})
 export class PixieModule {
@@ -21,7 +22,7 @@ export class PixieModule {
           useClass: LocalStorageImageDao,
         },
         {
-          provide: 'CONFIG',
+          provide: PIXIE_CONFIG,
           useValue: options,
         },
         {
@@ -35,7 +36,7 @@ export class PixieModule {
               ImageController,
             );
           },
-          inject: ['CONFIG'],
+          inject: [PIXIE_CONFIG],
         },
       ],
     };
