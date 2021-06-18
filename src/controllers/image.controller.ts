@@ -23,10 +23,10 @@ export class ImageController {
     @Query('height') height: string,
   ): Promise<void> {
     const size =
-      width && height
+      width || height
         ? {
-            width: parseInt(width),
-            height: parseInt(height),
+            width: width ? parseInt(width) : null,
+            height: height ? parseInt(height) : null,
           }
         : undefined;
     try {
