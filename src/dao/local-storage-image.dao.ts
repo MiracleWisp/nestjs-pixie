@@ -1,12 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import { ReadStream, WriteStream } from 'fs';
 import { ImageSize } from '../types/image-size';
 import { ImageDao } from './image.dao';
 import { Readable } from 'stream';
+import { PIXIE_CONFIG } from '../consts/injection-tokens';
+import { PixieOptions } from '../types/pixie-options';
 
 @Injectable()
 export class LocalStorageImageDao extends ImageDao {
+  private folderName: string;
+
+  constructor(@Inject(PIXIE_CONFIG) options: PixieOptions) {
+    super();
+    this.folderName = options.folderName || 'images';
+  }
+
   getImage(id: string, size?: ImageSize): Promise<Readable> {
     const imageStream: ReadStream = fs.createReadStream(
       this.composeImagePath(id, size),
@@ -15,8 +24,7 @@ export class LocalStorageImageDao extends ImageDao {
       imageStream.on('open', () => {
         resolve(imageStream);
       });
-      imageStream.on('error', (err) => {
-        console.log(err);
+      imageStream.on('error', () => {
         resolve(null);
       });
     });
@@ -33,9 +41,9 @@ export class LocalStorageImageDao extends ImageDao {
     if (size) {
       const width = size.width ? `_w${size.width}` : '';
       const height = size.height ? `_h${size.height}` : '';
-      return `./images/${id}${width}${height}.jpg`;
+      return `./${this.folderName}/${id}${width}${height}`;
     } else {
-      return `./images/${id}.jpg`;
+      return `./${this.folderName}/${id}`;
     }
   }
 }

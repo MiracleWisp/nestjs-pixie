@@ -33,7 +33,6 @@ export class ImageController {
       const image: Readable = await this.imageService.getImage(id, size);
       image.pipe(response);
     } catch (err) {
-      console.log(err);
       throw new HttpException('Image not found', HttpStatus.NOT_FOUND);
     }
     return;
