@@ -1,8 +1,8 @@
 import {
   Controller,
+  ForbiddenException,
   Get,
-  HttpException,
-  HttpStatus,
+  NotFoundException,
   Param,
   Query,
   Res,
@@ -10,6 +10,8 @@ import {
 import { ImageService } from '../services/image.service';
 import { Readable } from 'stream';
 import { Response } from 'express';
+import { ImageNotFoundError } from '../exceptions/image-not-found.error';
+import { SizeNotAllowedError } from '../exceptions/size-not-allowed.error';
 
 @Controller()
 export class ImageController {
@@ -33,7 +35,11 @@ export class ImageController {
       const image: Readable = await this.imageService.getImage(id, size);
       image.pipe(response);
     } catch (err) {
-      throw new HttpException('Image not found', HttpStatus.NOT_FOUND);
+      if (err instanceof ImageNotFoundError) {
+        throw new NotFoundException(err.message);
+      } else if (err instanceof SizeNotAllowedError) {
+        throw new ForbiddenException(err.message);
+      }
     }
     return;
   }
